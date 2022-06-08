@@ -6,7 +6,7 @@ import SquareGrid
 #  Classes implementing WFC
 
 
-#  Randomly choose a element from given a dictionary of weighted choices.
+#  Randomly choose a element from weighted choices.
 def choose(state_dict):
     s, w = list(state_dict.keys()), list(state_dict.values())
     elem = random.choices(s, weights=w)[0]
