@@ -2,7 +2,7 @@ import pygame as PG
 from pygame.locals import *
 import SquareGrid as SG
 import SpriteSheet as SP
-import SimpleTiles as ST
+import SimpleTile as ST
 import Wave as W
 
 
