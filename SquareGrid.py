@@ -1,5 +1,6 @@
 import random
 
+
 #  Basic methods for handling (x, y) positions and indices of a 2d grid.
 
 
@@ -37,7 +38,6 @@ def intersections(N):
 
 #  Yields the points (k, j) in common for two N X N squares a and b.
 def intersect_squares(a, b, N):
-
     ax, ay = a
     bx, by = b
     width, height = N, N
@@ -77,19 +77,14 @@ class GridPos:
         x, y = index % w, int(index / w)
         return x, y
 
-    # Yeilds the sequence of indices for wavelets to the left, top, right and bottom adjacent to the wavelet at
-    # pos (x,y)
-    def get_neighbors_from_pos(self, pos):
-        nbs = ((-1, 0), (0, -1), (1, 0), (0, 1))
-        for j in range(4):
-            s = add_pos(nbs[j], pos)
-            if self.inbounds(s):
-                yield self.get_index(s), j
-
-    # Yeilds the sequence of (x, y) co ordinates to the left, top, right and bottom adjacent cells/tiles
-    # for element at given index
-    def get_neighbors(self, index):
-        return self.get_neighbors_from_pos(self.get_pos(index))
+    #  Yields indices and direction_id of neighbors within grid boundry for given index.
+    def get_neighbors(self, index, directions):
+        n = len(directions)
+        pos = self.get_pos(index)
+        for j in range(n):
+            nbr_pos = add_pos(directions[j], pos)
+            if self.inbounds(nbr_pos):
+                yield self.get_index(nbr_pos), j
 
     # Returns True/False if (x, y) is within the boundries of the Grid
     def inbounds(self, a):
