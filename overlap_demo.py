@@ -15,7 +15,7 @@ def main():
     N = 3
 
     intersections = tuple(SquareGrid.intersections(N))
-    patdx, tiledx, weights, converted_input, colormap = C.process_overlap_input('overlap/Flowers1.png', N)
+    patdx, tiledx, weights, converted_input, colormap = C.process_overlap_input('Flowers1.png', N)
     pixeldx = {v: k for k, v in patdx.items()}
 
     rules = C.get_overlap_rules(patdx, intersections, N)
