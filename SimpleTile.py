@@ -1,14 +1,13 @@
 import Wave as W
-import SquareGrid as SG
 
 
 class SimpleTiles(W.Wave):
 
-    def __init__(self, width, height, wavelet, rules):
+    def __init__(self, width, height, wavelet, rules, neighbors):
         super().__init__(width, height, wavelet)
-        self.rules = rules
-        self.states = wavelet.states()
         self.weights = wavelet.weights()
+        self.rules = rules
+        self.neighbors = neighbors
 
     # Propagate constraint validation starting from index.
     def check_constraints(self, index):
@@ -20,12 +19,12 @@ class SimpleTiles(W.Wave):
 
             i = to_visit.pop()
 
-            for nb, direction in self.grid.get_neighbors(i):
+            for nb, direction in self.get_neighbors(i):
                 if nb not in visited:
 
                     #  Get constraints for each state in wavelet i
                     rules = set.union(*[self.rules[state][direction] for state in self.wm[i].states()])
-                    #print(str(rules))
+
                     # Check if nb has any consistent states
                     if not set(self.wm[nb].states()).issubset(rules):
                         allowed_states = rules & set(self.wm[nb].states())
@@ -38,3 +37,6 @@ class SimpleTiles(W.Wave):
                         to_visit.append(nb)  # propagate the change.
                     visited.append(nb)
         return True  # Constraints so-far satisfied.
+
+    def get_neighbors(self, index):
+        return self.grid.get_neighbors(index, self.neighbors)
