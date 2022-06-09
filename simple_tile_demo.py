@@ -11,7 +11,7 @@ def main():
     canvas = C.init_surface(768, 768, (51, 51, 51))
     pxsize = 24
 
-    patdx, tiledx, weights, converted_input, colormap = C.process_tile_input(24, 14, 24, 'world/roads_and_trees2.png')
+    patdx, tiledx, weights, converted_input, colormap = C.process_tile_input(24, 14, 24, 'roads_and_trees2.png')
 
     # Balance the weights abit
     weights[0] = 1
