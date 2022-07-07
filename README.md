@@ -6,7 +6,7 @@ https://user-images.githubusercontent.com/72634238/177887699-98318b7d-b8c9-4840-
 
 Poor Wiz the Wizard.  Forever chasing his dog Smog through a dungeon endlessly.
 
-Using Djikstra flooding, and WFC, Smog, being chased by a drunken Wiz, is directed towards a random location in the dungeon.
+Using Djikstra flooding, and WFC, Smog, in his endless pursuit of strawberries, is being chased by his owner, a drunken Wiz the Wizard.
 The dungeon is remade with the current state of the dungeon in the target area acting as an intial condition for WFC.
 
 The constraints are based on the Rooms constraints found in mxgmn git hub.
