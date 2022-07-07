@@ -1,9 +1,13 @@
 # Random Dungeon Generation with Wave Form Collapse. 
 
+
+https://user-images.githubusercontent.com/72634238/177887699-98318b7d-b8c9-4840-8ac1-c82b13f7e397.mp4
+
+
 Poor Wiz the Wizard.  Forever chasing his dog Smog through a dungeon endlessly.
 
-Using Djikstra flooding, and WFC, Smog, being chased by Wiz, is directed towards a random location in the dungeon.
-The dungeon is remade with the current state of the dungeon in the target are acting as an intial condition for WFC.
+Using Djikstra flooding, and WFC, Smog, being chased by a drunken Wiz, is directed towards a random location in the dungeon.
+The dungeon is remade with the current state of the dungeon in the target area acting as an intial condition for WFC.
 
 The constraints are based on the Rooms constraints found in mxgmn git hub.
 
