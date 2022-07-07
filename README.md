@@ -17,6 +17,11 @@ Rooms Constraints
 
 ![crawler_constraints](https://user-images.githubusercontent.com/72634238/177886420-8358fa03-7ddf-48da-bf37-e73cc242b4e8.png)
 
+
+There are technical difficulties with the approach I have taken and is thus a prototype of integrating WFC in pygame projects.  
+
+Improving the time it takes to solve larger arrays may come from adding backjump to the backtrack algorithm. Or perhaps, allowing the pausing and resuming of a search.  Using numpy arrays in the Wave class may help as well.  And, I am curious how a different algorithm may work as suggested by BorisTheBrave and used by Debroglie.
+
 Numpy is Required.
 
 Sources:
@@ -25,13 +30,5 @@ https://github.com/mxgmn/WaveFunctionCollapse
 
 https://github.com/PhyM73/WaveFunctionCollapse_DASC_project
 
-Sample Input:
+https://github.com/BorisTheBrave/DeBroglie
 
-
-![roads_and_trees2](https://user-images.githubusercontent.com/72634238/172665613-f7d84639-3ddd-43cc-bc6d-b24279401408.png)
-
-
-Sample Output:
-
-
-![Sample_output](https://user-images.githubusercontent.com/72634238/172665969-431b4067-79c5-41e3-b3ff-47dc1febd2d4.png)
