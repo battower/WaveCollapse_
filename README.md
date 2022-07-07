@@ -1,6 +1,18 @@
-# WaveCollapse_
+# Random Dungeon Generation with Wave Form Collapse. 
 
-Illustrative example of basic Wave Form Collapse Tile Map generation.  
+Poor Wiz the Wizard.  Forever chasing his dog Smog through a dungeon endlessly.
+
+Using Djikstra flooding, and WFC, Smog, being chased by Wiz, is directed towards a random location in the dungeon.
+The dungeon is remade with the current state of the dungeon in the target are acting as an intial condition for WFC.
+
+The constraints are based on the Rooms constraints found in mxgmn git hub.
+
+For easyness, I import constraints as a tiled image.  Such as this:
+
+Rooms Constraints
+
+![crawler_constraints](https://user-images.githubusercontent.com/72634238/177886420-8358fa03-7ddf-48da-bf37-e73cc242b4e8.png)
+
 Numpy is Required.
 
 Sources:
