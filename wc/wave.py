@@ -52,6 +52,7 @@ class Wave:
         self.index = -1
         self.state = -1
 
+    #  copy the given wave
     def read(self, wave):
         for i in range(len(self.shape)):
             self.wm[i] = wave.wm[i].copy()
@@ -131,6 +132,7 @@ class Wave:
             del copy[c]
             yield c
 
+    # returns true if constraints violated
     def reject(self, index, state):
         res, modified = self.prop.propagate_constraints(index, state, self.shape, self.wm)
         self.bk_stack.append(modified)
@@ -169,7 +171,6 @@ class Wave:
 
         self.backtrack()
         return False
-
 
     def set_max_rejects(self, max):
         self.max_rejects = max
