@@ -1,5 +1,7 @@
 from math import floor, ceil, sqrt
 
+# A butchered rewrite of square_grid, namely left-top orientation from right-bot, and  basic Rect class and such.
+
 edge_length = 1
 
 
@@ -38,7 +40,6 @@ def adjacent(x, y):
 
 def neighbor_indices(i, width):
     return i - 1, i - width, i + 1, i + width
-
 
 
 
