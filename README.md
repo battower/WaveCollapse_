@@ -20,7 +20,9 @@ Rooms Constraints
 There are technical difficulties with the approach I have taken and is thus a prototype of integrating WFC in pygame projects.
 Improving the time it takes to solve larger arrays may come from adding backjump to the backtrack algorithm. Or perhaps, allowing the pausing and resuming of a search.  Using numpy arrays in the Wave class may help as well.  And, I am curious how a different algorithm may work as suggested by BorisTheBrave and used by Debroglie.
 
-The main problem of course is just what to do when an area fails to generate according to the constraints.  Perhaps using Djikstra flooding to deal with the closest problem areas first, modifiying tile weights so 'walls' are more likely.  Or expanding the tile set to include safe terminating tiles.  I don't know.
+The main problem of course is just what to do when an area fails to generate according to the constraints.  Perhaps using Djikstra flooding to deal with the closest problem areas first, modifiying tile weights so 'walls' are more likely.  Or expanding the tile set to include safe terminating tiles.
+
+If you set the DEBUG flag in main.py, you can view the entire dungeon map.
 
 Numpy is Required.
 
