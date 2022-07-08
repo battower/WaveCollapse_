@@ -12,22 +12,32 @@ import sprite_game.sprites as sprites
 import common.util as util
 import wc.draw as draw
 
+
 class BaseDungeonGame:
 
     def __init__(self):
         title = "Random Dungeon Generation Test"
         self.bgcolr = sett.BGCOLR
-        screen_rect = sq.Rect(0, 0, sett.SCREEN_WIDTH, sett.SCREEN_HEIGHT)
+
+        if sett.DEBUG:
+            screen_shape = (sett.SCREEN_WIDTH, sett.SCREEN_HEIGHT)
+        else:
+            screen_shape = (sett.SUB_WIDTH, sett.SUB_HEIGHT)
 
         self.tsize = sett.TILESIZE
 
         pg.init()
         pg.display.set_caption(title)
 
-        self.screen = pg.display.set_mode(screen_rect.dim())
+        self.screen = pg.display.set_mode(screen_shape)
         self.clock = pg.time.Clock()
-        self.canvas = pg.Surface(screen_rect.dim()).convert()
+        self.canvas = pg.Surface(screen_shape).convert()
         self.canvas.fill(self.bgcolr)
+
+        self.sub_bgcolor = sett.SUB_BGCOLOR
+        self.sub_shape = (sett.SUB_WIDTH, sett.SUB_HEIGHT)
+        self.sub_canvas = pg.Surface(self.sub_shape).convert()
+        self.sub_canvas.fill(self.sub_bgcolor)
 
         self.dungeon_shape = (36, 36)
         self.dungeon = np.ones(self.dungeon_shape)
@@ -39,6 +49,8 @@ class BaseDungeonGame:
         self.treat = None
         self.wizard = None
         self.familiar = None
+
+        self.dt = 0
 
     def drunken_dungeon(self):
         x = random.randint(0, 35)
@@ -97,22 +109,20 @@ class BaseDungeonGame:
         wall_imgs = [self.img_dict[i] for i in {1, 7, 8, 9}]
         floor_imgs = [self.img_dict[i] for i in {4, 5, 6}]
         width, height = self.dungeon_shape
-        
+
         for j in range(height):
             for i in range(width):
                 v = self.dungeon[j][i]
                 if v == 1:
                     r = random.randint(0, 3)
-                    img = wall_imgs[r]
+                    img = wall_imgs[0]
                 else:
                     r = random.randint(0, 2)
-                    img = floor_imgs[r]
-
+                    img = floor_imgs[0]
 
                 pos = (i, j)
                 self.walls_floors[pos] = sprites.Block(pos, img)
 
-                
     def load_sprites(self):
         treat_pos = self.find_random_floor()
         self.treat_sprite(treat_pos)
@@ -131,18 +141,22 @@ class BaseDungeonGame:
 
         self.wall_floor_sprites()
 
-    def draw(self):
+    def draw_to(self, canvas):
         x, y = self.wizard.pos
         off = (x -6, y -6)
         rect = sq.Rect(x-6, y-6, 12, 12)
         for xy in sq.rect_points(rect):
             if xy in self.walls_floors:
-                self.walls_floors[xy].draw(self.canvas, off)
+                self.walls_floors[xy].draw(canvas, off)
             for c in self.characters:
                 if sq.eq(c.pos, xy):
-                    c.draw(self.canvas, off)
+                    c.draw(canvas, off)
 
+    def draw(self):
+        self.draw_to(self.sub_canvas)
+        self.canvas.blit(self.sub_canvas, (0, 0))
         self.screen.blit(self.canvas, (0, 0))
+
 
     def run(self):
 
@@ -155,10 +169,12 @@ class BaseDungeonGame:
                     sys.exit()
 
             self.canvas.fill(self.bgcolr)
+            self.sub_canvas.fill(self.sub_bgcolor)
+
             self.draw()
 
-            dt = self.clock.tick(60)
-            self.update(dt)
+            self.dt = self.clock.tick(sett.FPS)
+            self.update(self.dt)
 
             pg.display.update()
             run = True
@@ -170,18 +186,25 @@ class BaseDungeonGame:
 
         if self.familiar.found and self.wizard.found:
 
+            # flood dungeon so treat appears on a reachable tile
             flooded = self.flood_dungeon([self.treat.pos])
-            treat_pos = self.find_non_zero(flooded)
+            treat_pos = self.find_non_zero(flooded)  # random reachable tile
+
+            # flood dungeon from new treat position and give map to familiar
             self.treat.pos = treat_pos
             flooded = self.flood_dungeon([treat_pos])
+
             self.familiar.give_map(flooded, treat_pos)
+
             self.familiar.found = False
             self.wizard.found = False
 
+        elif self.wizard.found:  # wizard will stop once familiar is within a tile.
+            self.wizard.found = False
 
+        # flood dungeon with familiar position and give map to wizard
         flooded = self.flood_dungeon([self.familiar.pos])
         self.wizard.give_map(flooded, self.familiar.pos)
-
 
     def find_random_floor(self):
         arr = np.argwhere(self.dungeon == 0)
@@ -270,20 +293,31 @@ class WaveDungeonGame(BaseDungeonGame):
         bot = sq.Rect(12, 24, 12, 12)
         self.center_rect = sq.Rect(12, 12, 12, 12)
         self.room_rects = [left, top, right, bot]
+        self.count = 0
+        self.timer = 0
 
 
     def draw(self):
 
-
-        tiles = self.wave_reader.get_tiles()
-        draw.draw_wave(self.start_wave, (14, 12), 27, tiles, self.canvas)
-        draw.draw_wave(self.final_waves[0], (2, 12), 27, tiles, self.canvas)
-        draw.draw_wave(self.final_waves[1], (14, 0), 27, tiles, self.canvas)
-        draw.draw_wave(self.final_waves[2], (26, 12), 27, tiles, self.canvas)
-        draw.draw_wave(self.final_waves[3], (14, 24), 27, tiles, self.canvas)
+        if sett.DEBUG:
+            tiles = self.wave_reader.get_tiles()
+            draw.draw_wave(self.start_wave, (26, 12), 27, tiles, self.canvas)
+            draw.draw_wave(self.final_waves[0], (14, 12), 27, tiles, self.canvas)
+            draw.draw_wave(self.final_waves[1], (26, 0), 27, tiles, self.canvas)
+            draw.draw_wave(self.final_waves[2], (38, 12), 27, tiles, self.canvas)
+            draw.draw_wave(self.final_waves[3], (26, 24), 27, tiles, self.canvas)
 
         super().draw()
 
+        if sett.SAVE_OUTPUT:
+            self.timer += self.dt
+            if self.timer > 500:
+
+                filename = 'images/out/dungeon_'+str(self.count)+'.png'
+                pg.image.save(self.sub_canvas, filename)
+                self.count += 1
+
+                self.timer = 0
 
     def update(self, dt):
         self.familiar.update(dt)
@@ -336,19 +370,18 @@ class WaveDungeonGame(BaseDungeonGame):
 
         return pos
 
-
     def generate_dungeon(self, start_wave):
         print('generate dungeon')
         self.dungeon = np.ones(self.dungeon_shape)
         self.start_wave = start_wave
-        self.make_rooms(start_wave)  # sets safe_rooms and riins
+        self.make_rooms(start_wave)  # sets safe_rooms and rooms
 
         # write rooms to dungeon
         rects = self.room_rects
         start_room = self.convert_wave(start_wave)  # wave->room
         self.write_room_to_dungeon(start_room, self.center_rect)
 
-        for i in self.safe_rooms:
+        for i in range(len(self.rooms)):
             room = self.rooms[i]
             rect = rects[i]
             self.write_room_to_dungeon(room, rect)
