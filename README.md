@@ -22,7 +22,7 @@ Improving the time it takes to solve larger arrays may come from adding backjump
 
 The main problem of course is just what to do when an area fails to generate according to the constraints.  Perhaps using Djikstra flooding to deal with the closest problem areas first, modifiying tile weights so 'walls' are more likely.  Or expanding the tile set to include safe terminating tiles.
 
-If you set the DEBUG flag in main.py, you can view the entire dungeon map.
+If you set the DEBUG to True, you can view the entire dungeon each generation cycle.
 
 Numpy is Required.
 
