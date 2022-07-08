@@ -1,12 +1,11 @@
 import pygame as pg
 import common.square_grid as sq
-import common.misc as misc
-import common.flood as djik
+
 import random
 from collections import defaultdict
-import numpy as np
-import common.debugr as dbug
 
+import common.debugr as dbug
+import settings as sett
 
 class Block(pg.sprite.Sprite):
 
@@ -120,19 +119,20 @@ class Brul(Block):
 
     def __init__(self, pos, img):
         super().__init__(pos, img)
+
         self.timer = 0
         self.found = False
         self.flooded = None
         self.goal = None
         self.explored = None
-        self.intox = 0.0
+        self.drunkeness = 0.0
 
     def intoxicate(self, val):
         self.drunkeness = val
 
     def stumble(self):
         return random.random() < self.drunkeness
-    
+
     def reached_goal(self):
         return self.found
 
