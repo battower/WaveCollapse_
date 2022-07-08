@@ -371,7 +371,7 @@ class WaveDungeonGame(BaseDungeonGame):
         return pos
 
     def generate_dungeon(self, start_wave):
-        print('generate dungeon')
+
         self.dungeon = np.ones(self.dungeon_shape)
         self.start_wave = start_wave
         self.make_rooms(start_wave)  # sets safe_rooms and rooms
@@ -390,10 +390,12 @@ class WaveDungeonGame(BaseDungeonGame):
     def make_rooms(self, start_wave):
         self.safe_rooms.clear()
 
+        # Each wave intersects the left half, or the top half, etc. of the start_wave
         room_offsets = [(-6, 0), (0, -6), (6, 0), (0, 6)]
         num_offsets = len(room_offsets)
         wave_xys = {}
 
+        #  Coordinates of each intersecting point
         for offset_xy, coords in sq.intersect_squares(12):
             if offset_xy in room_offsets:
                 wave_xys[offset_xy] = coords
@@ -406,9 +408,10 @@ class WaveDungeonGame(BaseDungeonGame):
         shape = sq.Rect(0, 0, 12, 12)
         reader = self.wave_reader
 
-        a = [self.new_wave() for i in range(num_offsets)]
-        b = [self.new_wave() for i in range(num_offsets)]
+        a = [self.new_wave() for i in range(num_offsets)]  # intermediate waves
+        b = [self.new_wave() for i in range(num_offsets)]  # final
 
+        # Copy the appropriate portion of the start_wave to each of the intermediate waves.
         util.entangle_list(start_wave, a, wave_xys, wave_wzs, room_offsets)
 
         solved = self.safe_rooms
@@ -421,11 +424,13 @@ class WaveDungeonGame(BaseDungeonGame):
             a[i].set_max_rejects(1000)
             b[i].set_max_rejects(1000)
 
+            # solve intermediate wave a[i]
             a_res = util.solve_wave(a[i], rand=False)
-            util.entangle(a[i], b[i], xy, wz)
+            util.entangle(a[i], b[i], xy, wz)  # copy appropriaate protion of a[i] for final generation
 
+            # if both generations are successful room connects to the generated area
             if util.solve_wave(b[i], rand=False) and a_res:
-                solved.append(i)
+                solved.append(i)  # successfully generated areas
 
         self.final_waves = b
         self.rooms = [self.convert_wave(b[i]) for i in range(num_offsets)]
